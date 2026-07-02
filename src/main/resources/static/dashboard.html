@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Learnix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <aside class="sidebar glass">
+        <h1><i class="fa-solid fa-graduation-cap"></i> Learnix</h1>
+        <div class="nav-links">
+            <span id="userNameDisplay">Welcome!</span>
+            <a href="dashboard.html" class="active"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a href="subjects.html"><i class="fa-solid fa-book"></i> Subjects</a>
+            <a href="calendar.html"><i class="fa-solid fa-calendar-days"></i> Calendar</a>
+            <a href="solo-study.html"><i class="fa-solid fa-headphones"></i> Solo Study Mode</a>
+            <a href="#" id="profileBtn"><i class="fa-solid fa-user-circle"></i> Profile</a>
+            
+            <div class="theme-toggle-container">
+                <span id="themeLabel" class="theme-toggle-label"><i class="fa-solid fa-sun"></i> Light Mode</span>
+                <label class="ios-switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="container dashboard-shell">
+            <section class="dashboard-hero glass fade-in">
+                <div>
+                    <p class="eyebrow">Study Command Center</p>
+                    <h2 id="dashboardGreeting">Ready for today?</h2>
+                    <p id="dashboardSummary">Loading your study plan...</p>
+                </div>
+                <div class="quick-actions">
+                    <a href="subjects.html" class="btn btn-secondary"><i class="fa-solid fa-book-open"></i> Subjects</a>
+                    <a href="add-task.html" class="btn"><i class="fa-solid fa-plus"></i> New Task</a>
+                </div>
+            </section>
+            
+            <div class="grid dashboard-stats">
+                <div class="stat-card glass">
+                    <i class="fa-solid fa-list-check"></i>
+                    <h3>Total Tasks</h3>
+                    <p id="totalTasks">0</p>
+                </div>
+                <div class="stat-card glass">
+                    <i class="fa-solid fa-check-circle" style="color: var(--success-color)"></i>
+                    <h3>Completed</h3>
+                    <p id="completedTasks">0</p>
+                </div>
+                <div class="stat-card glass">
+                    <i class="fa-solid fa-clock" style="color: var(--warning-color)"></i>
+                    <h3>Pending</h3>
+                    <p id="pendingTasks">0</p>
+                </div>
+            </div>
+            
+            <section class="dashboard-panels">
+                <div class="card glass progress-panel">
+                    <div>
+                        <p class="eyebrow">Completion</p>
+                        <h3><i class="fa-solid fa-bolt"></i> Overall Progress</h3>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText" class="progress-copy">0% completed</p>
+                </div>
+
+                <div class="card glass smart-suggestions" id="smartSuggestions">
+                    <div>
+                        <p class="eyebrow">Next Best Move</p>
+                        <h3><i class="fa-solid fa-lightbulb"></i> Smart Suggestions</h3>
+                    </div>
+                    <div id="suggestionContent" class="suggestion-stack">Loading suggestions...</div>
+                </div>
+            </section>
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Subjects</p>
+                    <h3>Task Boards</h3>
+                </div>
+                <a href="subjects.html" class="text-link">View analytics <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="grid subject-task-grid" id="subjectsContainer">
+                <!-- Subjects and their tasks will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-content card glass">
+            <div class="calendar-header" style="margin-bottom: 1rem;">
+                <h3 style="margin: 0;">Profile</h3>
+                <button class="btn" id="closeProfileBtn" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="profile-header" style="text-align: center; margin-bottom: 1.5rem;">
+                <div class="avatar-container" style="position: relative; display: inline-block;">
+                    <img id="profileAvatarImg" src="" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: none; border: 2px solid var(--primary-color);">
+                    <i id="profileAvatarIcon" class="fa-solid fa-user-circle fa-4x" style="color: var(--primary-color);"></i>
+                    <label for="profilePicUpload" class="avatar-edit-btn" style="position: absolute; bottom: 0; right: -5px; background: var(--primary-color); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                        <i class="fa-solid fa-camera" style="font-size: 0.8rem;"></i>
+                    </label>
+                    <input type="file" id="profilePicUpload" accept="image/*" style="display: none;">
+                </div>
+                <h2 style="margin-top: 1rem; margin-bottom: 0.2rem;" id="profileNameDisplay">Student</h2>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.85rem;">Official: <span id="profileOfficialNameDisplay">Student</span></p>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-user"></i> Display Name</label>
+                <input type="text" id="profileDisplayName" class="ios-input" placeholder="How you want to be called">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-graduation-cap"></i> Grade / Year</label>
+                <input type="text" id="profileGrade" class="ios-input" placeholder="e.g., 10th Grade, Sophomore">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-id-badge"></i> Student Status</label>
+                <input type="text" id="profileStatus" class="ios-input" placeholder="e.g., Full-time, Part-time">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-clock"></i> Total Study Time</label>
+                <div class="stat-card glass" style="text-align: center; padding: 1rem; margin-top: 0.5rem; min-height: 80px;">
+                    <p id="profileTotalTime" style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">0h 0m</p>
+                </div>
+            </div>
+            <button id="saveProfileBtn" class="btn btn-block" style="margin-top: 1rem;"><i class="fa-solid fa-save"></i> Save Profile</button>
+            <button id="modalLogoutBtn" class="btn btn-danger btn-block" style="margin-top: 0.5rem;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+            <button id="modalDeleteAccountBtn" class="btn btn-block" style="margin-top: 0.5rem; background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color);"><i class="fa-solid fa-user-xmark"></i> Delete Account</button>
+        </div>
+    </div>
+
+    <!-- Floating AI Button -->
+    <div class="floating-ai-btn" onclick="alert('AI Assistant features coming soon!')" title="Ask AI">
+        <i class="fa-solid fa-sparkles"></i>
+    </div>
+</body>
+</html>

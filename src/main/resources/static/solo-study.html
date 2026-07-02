@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Study Mode - Learnix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background Media Layer -->
+    <div class="bg-media-container">
+        <video id="bgVideo" class="bg-video" autoplay loop muted playsinline>
+            <source src="" type="video/mp4">
+        </video>
+    </div>
+    <div class="bg-overlay"></div>
+
+    <aside class="sidebar glass">
+        <h1><i class="fa-solid fa-graduation-cap"></i> Learnix</h1>
+        <div class="nav-links">
+            <span id="userNameDisplay">Welcome!</span>
+            <a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a href="subjects.html"><i class="fa-solid fa-book"></i> Subjects</a>
+            <a href="calendar.html"><i class="fa-solid fa-calendar-days"></i> Calendar</a>
+            <a href="solo-study.html" class="active"><i class="fa-solid fa-headphones"></i> Solo Study Mode</a>
+            <a href="#" id="profileBtn"><i class="fa-solid fa-user-circle"></i> Profile</a>
+            
+            <div class="theme-toggle-container">
+                <span id="themeLabel" class="theme-toggle-label"><i class="fa-solid fa-sun"></i> Light Mode</span>
+                <label class="ios-switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <h2 style="margin-bottom: 2rem;"><i class="fa-solid fa-headphones"></i> Solo Study Mode</h2>
+            
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                
+                <!-- Timer Card -->
+                <div class="card glass" style="text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 400px;">
+                    <h3><i class="fa-solid fa-stopwatch"></i> Focus Timer</h3>
+                    <div class="timerDisplay" style="font-size: 4rem; font-weight: 700; color: var(--text-color); font-variant-numeric: tabular-nums; margin: 1rem 0; text-shadow: 0 4px 10px rgba(0,0,0,0.1); letter-spacing: -2px;">00:25:00</div>
+                    
+                    <div class="form-group" style="text-align: left; max-width: 250px; margin: 0 auto 1.5rem auto;">
+                        <label style="font-size: 0.85rem; color: var(--text-secondary);"><i class="fa-solid fa-book"></i> Subject (Optional)</label>
+                        <select id="timerSubjectSelect" style="padding-left: 1rem;">
+                            <option value="">-- General Study --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="timer-inputs">
+                        <input type="number" id="timerHours" min="0" max="23" value="0" placeholder="HH"><span>:</span>
+                        <input type="number" id="timerMinutes" min="0" max="59" value="25" placeholder="MM"><span>:</span>
+                        <input type="number" id="timerSeconds" min="0" max="59" value="0" placeholder="SS">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem; display: flex; justify-content: center; gap: 0.5rem;">
+                        <button class="btn startTimerBtn" style="padding: 0.8rem 1.5rem; font-size: 1rem; border-radius: 20px;"><i class="fa-solid fa-play"></i> Start</button>
+                        <button class="btn btn-danger pauseTimerBtn" style="display:none; padding: 0.8rem 1.5rem; font-size: 1rem; border-radius: 20px;"><i class="fa-solid fa-pause"></i> Pause</button>
+                        <button class="btn resetTimerBtn" style="background: rgba(142, 142, 147, 0.2); color: var(--text-color); padding: 0.8rem 1.5rem; font-size: 1rem; border-radius: 20px;"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                        <button class="btn showFloatingTimerBtn" style="background: rgba(142, 142, 147, 0.2); color: var(--text-color); padding: 0.8rem 1.1rem; font-size: 1rem; border-radius: 20px;" title="Show floating timer"><i class="fa-solid fa-up-right-from-square"></i></button>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn" onclick="setCustomTimer(0, 25, 0)" style="background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); padding: 0.4rem 0.8rem; font-size: 0.85rem; box-shadow: none; border-radius: 16px;">25m</button>
+                        <button class="btn" onclick="setCustomTimer(0, 5, 0)" style="background: transparent; color: var(--success-color); border: 2px solid var(--success-color); padding: 0.4rem 0.8rem; font-size: 0.85rem; box-shadow: none; border-radius: 16px;">5m</button>
+                        <button class="btn" onclick="setCustomTimer(1, 0, 0)" style="background: transparent; color: var(--warning-color); border: 2px solid var(--warning-color); padding: 0.4rem 0.8rem; font-size: 0.85rem; box-shadow: none; border-radius: 16px;">1h</button>
+                    </div>
+
+                    <button class="btn" id="openFocusModeBtn" style="margin: 1.5rem auto 0 auto; padding: 0.75rem 1.2rem; border-radius: 18px; background: #111; color: #fff;">
+                        <i class="fa-solid fa-expand"></i> Deep Focus
+                    </button>
+                </div>
+
+                <!-- Subject Tracker Card -->
+                <div class="card glass">
+                    <h3><i class="fa-solid fa-chart-bar"></i> Subject Tracker</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Track your progress across subjects.</p>
+                    <div id="subjectTrackerContainer" class="subject-tracker-list">
+                        <!-- Populated by JS -->
+                        <p style="color: var(--text-secondary); text-align: center; margin-top: 2rem;">Loading subjects...</p>
+                    </div>
+                </div>
+
+                <!-- Sticky Notes Card -->
+                <div class="card glass">
+                    <h3><i class="fa-solid fa-note-sticky"></i> Quick Notes</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Your notes are saved automatically.</p>
+                    <textarea id="stickyNote" class="sticky-note" placeholder="Jot down your thoughts, tasks, or study goals here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Ambience Selection -->
+            <div class="card glass" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-palette"></i> Ambience & Backgrounds</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="ambience-btn" data-theme="default"><i class="fa-solid fa-circle-half-stroke"></i> Default Glass</button>
+                    <button class="ambience-btn" data-theme="bg-forest" data-video="media/video/forest.mp4"><i class="fa-solid fa-tree"></i> Deep Forest</button>
+                    <button class="ambience-btn" data-theme="bg-rain" data-video="media/video/rain.mp4"><i class="fa-solid fa-cloud-rain"></i> Midnight Rain</button>
+                    <button class="ambience-btn" data-theme="bg-space" data-video="media/video/space.mp4"><i class="fa-solid fa-user-astronaut"></i> Deep Space</button>
+                </div>
+                <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--card-border); padding-top: 1rem;">
+                    <div>
+                        <h4 style="margin: 0; font-size: 0.95rem;">Ambience Sound</h4>
+                        <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">Uses audio from the selected video background.</p>
+                    </div>
+                    <button id="toggleSoundBtn" class="btn" style="background: var(--input-bg); color: var(--text-color); border: 1px solid var(--card-border); border-radius: 50%; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center;">
+                        <i class="fa-solid fa-volume-xmark" id="soundIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="focus-setup-overlay" id="focusSetupModal">
+        <div class="focus-setup card glass">
+            <div class="calendar-header" style="margin-bottom: 1rem;">
+                <h3 style="margin: 0;"><i class="fa-solid fa-bullseye"></i> Deep Focus</h3>
+                <button class="btn" id="closeFocusSetupBtn" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="focus-setup-grid">
+                <div class="form-group focus-sessions-control">
+                    <label>Sessions: <span id="focusSessionsCount">4</span></label>
+                    <input type="range" id="focusSessionsInput" min="1" max="12" value="4">
+                </div>
+                <div class="form-group">
+                    <label>Focus Minutes</label>
+                    <input type="number" id="focusMinutesInput" class="ios-input" min="1" max="180" value="25">
+                </div>
+                <div class="form-group">
+                    <label>Short Break Minutes</label>
+                    <input type="number" id="shortBreakMinutesInput" class="ios-input" min="1" max="60" value="5">
+                </div>
+                <div class="form-group">
+                    <label>Long Break Minutes</label>
+                    <input type="number" id="longBreakMinutesInput" class="ios-input" min="1" max="120" value="15">
+                </div>
+            </div>
+            <div class="focus-plan-section">
+                <div class="focus-plan-legend">
+                    <span><i class="focus-dot focus"></i> Focus</span>
+                    <span><i class="focus-dot short"></i> Short break</span>
+                    <span><i class="focus-dot long"></i> Long break</span>
+                </div>
+                <div class="focus-plan-bar" id="focusPlanBar"></div>
+                <p class="focus-plan-hint">Click slots to switch between focus, short break, long break, and empty.</p>
+            </div>
+            <button class="btn btn-block" id="startFocusModeBtn"><i class="fa-solid fa-play"></i> Start Deep Focus</button>
+        </div>
+    </div>
+
+    <div class="focus-mode-screen" id="focusModeScreen">
+        <button class="focus-exit-btn" id="exitFocusModeBtn" title="Exit Deep Focus"><i class="fa-solid fa-xmark"></i></button>
+        <div class="focus-mode-content">
+            <p id="focusModePhase">Deep Focus</p>
+            <div class="focusModeTimerDisplay">00:25:00</div>
+            <span id="focusModeProgress">Session 1 of 4</span>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fill user name
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = JSON.parse(userStr);
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            if (typeof loadSubjectTracker === 'function') {
+                loadSubjectTracker();
+            }
+        });
+    </script>
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-content card glass">
+            <div class="calendar-header" style="margin-bottom: 1rem;">
+                <h3 style="margin: 0;">Profile</h3>
+                <button class="btn" id="closeProfileBtn" style="padding: 0.2rem 0.5rem;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="profile-header" style="text-align: center; margin-bottom: 1.5rem;">
+                <div class="avatar-container" style="position: relative; display: inline-block;">
+                    <img id="profileAvatarImg" src="" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: none; border: 2px solid var(--primary-color);">
+                    <i id="profileAvatarIcon" class="fa-solid fa-user-circle fa-4x" style="color: var(--primary-color);"></i>
+                    <label for="profilePicUpload" class="avatar-edit-btn" style="position: absolute; bottom: 0; right: -5px; background: var(--primary-color); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                        <i class="fa-solid fa-camera" style="font-size: 0.8rem;"></i>
+                    </label>
+                    <input type="file" id="profilePicUpload" accept="image/*" style="display: none;">
+                </div>
+                <h2 style="margin-top: 1rem; margin-bottom: 0.2rem;" id="profileNameDisplay">Student</h2>
+                <p style="margin: 0; color: var(--text-secondary); font-size: 0.85rem;">Official: <span id="profileOfficialNameDisplay">Student</span></p>
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-user"></i> Display Name</label>
+                <input type="text" id="profileDisplayName" class="ios-input" placeholder="How you want to be called">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-graduation-cap"></i> Grade / Year</label>
+                <input type="text" id="profileGrade" class="ios-input" placeholder="e.g., 10th Grade, Sophomore">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-id-badge"></i> Student Status</label>
+                <input type="text" id="profileStatus" class="ios-input" placeholder="e.g., Full-time, Part-time">
+            </div>
+            <div class="form-group">
+                <label><i class="fa-solid fa-clock"></i> Total Study Time</label>
+                <div class="stat-card glass" style="text-align: center; padding: 1rem; margin-top: 0.5rem; min-height: 80px;">
+                    <p id="profileTotalTime" style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">0h 0m</p>
+                </div>
+            </div>
+            <button id="saveProfileBtn" class="btn btn-block" style="margin-top: 1rem;"><i class="fa-solid fa-save"></i> Save Profile</button>
+            <button id="modalLogoutBtn" class="btn btn-danger btn-block" style="margin-top: 0.5rem;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+            <button id="modalDeleteAccountBtn" class="btn btn-block" style="margin-top: 0.5rem; background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color);"><i class="fa-solid fa-user-xmark"></i> Delete Account</button>
+        </div>
+    </div>
+    <!-- Floating AI Button -->
+    <div class="floating-ai-btn" onclick="alert('AI Assistant features coming soon!')" title="Ask AI">
+        <i class="fa-solid fa-sparkles"></i>
+    </div>
+</body>
+</html>
