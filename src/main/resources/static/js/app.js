@@ -6,71 +6,6 @@ const AMBIENCE_MEDIA = {
     'bg-space': 'media/video/space.mp4'
 };
 const AMBIENCE_TIME_KEY = 'ambiencePlaybackTime';
-const WEBSITE_VISIT_COUNT_KEY = 'learnixWebsiteVisitCount';
-
-function getWebsiteVisitCount() {
-    const savedCount = parseInt(localStorage.getItem(WEBSITE_VISIT_COUNT_KEY), 10);
-    return Number.isFinite(savedCount) && savedCount > 0 ? savedCount : 0;
-}
-
-function formatWebsiteVisitMessage(count) {
-    return `You visited this website ${count} ${count === 1 ? 'time' : 'times'}.`;
-}
-
-function updateWebsiteVisitDisplays(count = getWebsiteVisitCount()) {
-    document.querySelectorAll('[data-website-visit-count]').forEach(el => {
-        el.textContent = count;
-    });
-
-    document.querySelectorAll('[data-website-visit-message]').forEach(el => {
-        el.textContent = formatWebsiteVisitMessage(count);
-    });
-}
-
-function ensureWebsiteVisitBadge(count) {
-    let badge = document.getElementById('websiteVisitBadge');
-
-    if (!badge) {
-        badge = document.createElement('div');
-        badge.id = 'websiteVisitBadge';
-        badge.className = 'website-visit-badge glass';
-        badge.setAttribute('aria-live', 'polite');
-        badge.innerHTML = `
-            <i class="fa-solid fa-chart-line"></i>
-            <span data-website-visit-message></span>
-        `;
-        document.body.appendChild(badge);
-    }
-
-    updateWebsiteVisitDisplays(count);
-}
-
-function ensureProfileVisitSection() {
-    const profileModal = document.getElementById('profileModal');
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
-
-    if (!profileModal || !saveProfileBtn || document.getElementById('profileWebsiteVisits')) return;
-
-    const visitSection = document.createElement('div');
-    visitSection.className = 'form-group';
-    visitSection.innerHTML = `
-        <label><i class="fa-solid fa-chart-line"></i> Website Visits</label>
-        <div class="profile-visit-stat glass">
-            <p id="profileWebsiteVisits" data-website-visit-count>0</p>
-            <span data-website-visit-message></span>
-        </div>
-    `;
-
-    saveProfileBtn.before(visitSection);
-}
-
-function initWebsiteVisitCounter() {
-    const count = getWebsiteVisitCount() + 1;
-    localStorage.setItem(WEBSITE_VISIT_COUNT_KEY, String(count));
-    ensureWebsiteVisitBadge(count);
-    ensureProfileVisitSection();
-    updateWebsiteVisitDisplays(count);
-}
 
 function normalizeMediaSrc(src) {
     if (!src) return '';
@@ -263,8 +198,6 @@ function initTheme() {
 initTheme();
 
 document.addEventListener('DOMContentLoaded', () => {
-    initWebsiteVisitCounter();
-
     // Bind Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
