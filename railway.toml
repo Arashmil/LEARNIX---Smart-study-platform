@@ -1,0 +1,6 @@
+[build]
+builder = "RAILPACK"
+buildCommand = "./gradlew bootJar -x test"
+
+[deploy]
+startCommand = "java -jar build/libs/learnix-0.0.1-SNAPSHOT.jar"
