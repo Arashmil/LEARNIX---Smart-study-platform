@@ -202,7 +202,6 @@ body {
 #logoutBtn { color: var(--danger-color); }
 #logoutBtn i { color: var(--danger-color); }
 
-/* Theme Toggle Switch (iOS Style) */
 .theme-toggle-container {
     margin-top: auto;
     display: flex;
@@ -1165,7 +1164,6 @@ body {
     }
 }
 
-/* Floating AI Button */
 .floating-ai-btn {
     position: fixed;
     bottom: 30px;
