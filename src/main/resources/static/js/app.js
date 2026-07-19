@@ -912,6 +912,26 @@ async function deleteTask(taskId) {
     }
 }
 
+async function deleteSubject(subjectId, subjectName) {
+    if (!confirm(`Delete "${subjectName}" and all of its tasks? This cannot be undone.`)) return;
+
+    try {
+        const response = await fetch(`/api/subjects/${subjectId}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Unable to delete subject');
+
+        if (typeof loadSubjectsDashboard === 'function' && document.getElementById('subjectsDashboardContainer')) {
+            loadSubjectsDashboard();
+        } else if (typeof loadDashboardData === 'function') {
+            loadDashboardData();
+        } else {
+            window.location.reload();
+        }
+    } catch (error) {
+        console.error('Error deleting subject:', error);
+        alert('Unable to delete the subject. Please try again.');
+    }
+}
+
 // --- Study Timer Logic ---
 let timerInterval;
 let timeLeft = 0;
@@ -2112,6 +2132,7 @@ window.loadSubjectsDashboard = async function() {
                     ${tasksHtml}
                     <div style="margin-top: 1rem; text-align: center;">
                         <a href="add-task.html?subjectId=${subj.id}" class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;"><i class="fa-solid fa-plus"></i> Add Task</a>
+                        <button type="button" class="btn btn-danger delete-subject-btn" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; margin-left: 0.35rem;" title="Delete subject and all its tasks"><i class="fa-solid fa-trash"></i> Delete Subject</button>
                     </div>
                 </div>
             `;
@@ -2123,6 +2144,11 @@ window.loadSubjectsDashboard = async function() {
                 
                 const details = card.querySelector('.subject-details');
                 details.classList.toggle('active');
+            });
+
+            card.querySelector('.delete-subject-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteSubject(subj.id, subj.name);
             });
 
             container.appendChild(card);

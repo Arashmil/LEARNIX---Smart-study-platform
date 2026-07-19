@@ -28,4 +28,10 @@ public class SubjectController {
         List<SubjectDto> subjects = subjectService.getSubjectsByUser(userId);
         return ResponseEntity.ok(subjects);
     }
+
+    @DeleteMapping("/{subjectId}")
+    public ResponseEntity<Void> deleteSubject(@PathVariable Long subjectId) {
+        subjectService.deleteSubject(subjectId);
+        return ResponseEntity.noContent().build();
+    }
 }

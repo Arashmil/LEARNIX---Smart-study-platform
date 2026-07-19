@@ -8,6 +8,7 @@ import com.learnix.repository.SubjectRepository;
 import com.learnix.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +41,17 @@ public class SubjectService {
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found"));
         subject.setStudyTime(subject.getStudyTime() + additionalTime);
         subjectRepository.save(subject);
+    }
+
+    /**
+     * Deletes the subject and its associated tasks. Tasks are owned by a subject,
+     * so removing them together prevents orphaned task records.
+     */
+    @Transactional
+    public void deleteSubject(Long subjectId) {
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found"));
+        subjectRepository.delete(subject);
     }
 
     private SubjectDto mapToDto(Subject subject) {
